@@ -1,19 +1,23 @@
 ; app.asm
-section .data
-    msg db 'Hello Hamida', 0   ; Mesaj ve null terminatör
+; Author: Hamida Allahverdiyeva
+; Date: 2024-08-15
 
-section .text
-    global _start
+global _start
+
+section .text:
 
 _start:
-    ; Windows API ile ekrana yazdırmaq
-    mov eax, 4            ; sys_write sistemi çağırmaq (Windows)
-    mov ebx, 1            ; stdout (ekran)
-    mov ecx, msg          ; Mesajın adresi
-    mov edx, 13           ; Mesaj uzunluğu
-    int 0x80              ; Sistem çağır
+    mov eax, 0x4
+    mov ebx, 1
+    mov ecx, message
+    mov edx, message_len
+    int 0x80
 
-    ; Programı sonlandır
-    mov eax, 1            ; sys_exit sistem çağırısı
-    xor ebx, ebx          ; Çıxış kodu 0
-    int 0x80              ; Sistem çağır
+    ;exit
+    mov eax, 0x1
+    mov ebx, 0
+    int 0x80
+
+section .data:
+    message: db "Hello Hamida!", 0xA
+    message_len equ $ - message
