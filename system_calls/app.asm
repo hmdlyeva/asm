@@ -1,6 +1,6 @@
 ; app.asm
 ; Author: Hamida Allahverdiyeva
-; Date: 2024-08-15
+; Date: 2024-08-16
 
 
 section .text     ;code segment
