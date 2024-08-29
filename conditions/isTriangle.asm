@@ -1,6 +1,6 @@
 ;conditions.asm
 ; Author: Hamida Allahverdiyeva
-; Date: 2024-08-19
+; Date: 2024-08-25
 
 SYS_EXIT  equ 1
 SYS_READ  equ 3
@@ -55,32 +55,54 @@ _start:
    mov eax, [num3]
    sub eax, '0'
 
-   cmp ecx, ebx
-   jg  check_third_num
-   mov ecx, ebx
-   
-check_third_num:
-   cmp ecx, eax
-   jg  _exit
-   mov ecx, eax
-   
+; check_first_condition:
+   mov edx, ecx
+   add edx, ebx
+   cmp edx, eax
+   jle false_condition
+   ; jg  check_second_condition
+
+; check_second_condition:
+   ; mov ecx, [num1]
+   ; sub ecx, '0'
+   ; sub ecx, ebx
+   ; add ecx, '0'
+   mov edx, ecx
+   add edx, eax
+   cmp edx, ebx
+   jle false_condition
+   ; jg  check_last_condition
+
+; check_last_condition:
+   ; mov ecx, [num1]
+   ; sub ecx, '0'
+   ; sub ecx, eax
+   ; add ecx, '0'
+   mov edx, ebx
+   add edx, eax
+   cmp edx, ecx
+   jle false_condition
+   ; jg  true_condition
+
+true_condition:
+   mov eax, SYS_WRITE
+   mov ebx, STDOUT
+   mov ecx, true_msg
+   mov edx, true_len
+   int 0x80
+   jmp _exit
+
+false_condition:
+   ; mov ah, 09h
+   mov eax, SYS_WRITE
+   mov ebx, STDOUT
+   mov ecx, false_msg
+   mov edx, false_len
+   int 0x80
+
 _exit:
-   add ecx, '0'
-   mov [largest], ecx
-
-   mov eax, SYS_WRITE
+   mov eax, SYS_EXIT,
    mov ebx, STDOUT
-   mov ecx, msg4
-   mov edx, len4
-   int 0x80
-
-   mov eax, SYS_WRITE
-   mov ebx, STDOUT
-   mov ecx, largest
-   mov edx, 2
-   int 0x80
-
-   mov eax, SYS_EXIT
    int 0x80
 
 segment .data
@@ -93,11 +115,13 @@ segment .data
    msg3 db "Please enter a third digit:", 0xA
    len3 equ $ - msg3
 
-   msg4 db "The largest digit is: "
-   len4 equ $ - msg4
+   true_msg db "This triangle is True!"
+   true_len equ $ - true_msg
+
+   false_msg db "This triangle is False!"
+   false_len equ $ - false_msg
 
 segment .bss
    num1 resd 2
    num2 resd 2
    num3 resd 2
-   largest resd 2  
